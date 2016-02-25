@@ -1,7 +1,6 @@
-package resources;
+package resource;
 
 import hibernate.Hibernate;
-import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -11,7 +10,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import model.Item;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -13,6 +13,13 @@ import javax.persistence.Table;
 @Table(name = "orders")
 public class Order implements Serializable {
 
+    public static final int STATUS_OPENED = 1;
+    public static final int STATUS_CLOSED = 2;
+    
+    public static final int PAYMENT_METHOD_CASH = 1;
+    public static final int PAYMENT_METHOD_DEBIT = 2;
+    public static final int PAYMENT_METHOD_CREDIT = 3;
+    
     @Id
     @GeneratedValue
     private int id;
