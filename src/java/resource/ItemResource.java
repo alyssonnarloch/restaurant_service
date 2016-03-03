@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import model.Item;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 @Path("item")
 public class ItemResource {
@@ -29,7 +30,11 @@ public class ItemResource {
     public Response findAll() {
         SessionFactory sf = Hibernate.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.beginTransaction();
+                
         List<Item> items = s.createCriteria(Item.class).list();
+        t.commit();
+        
         s.flush();
         s.close();
 
