@@ -33,7 +33,11 @@ public class OrderResource {
     public Response findById(@PathParam("id") int id) {
         SessionFactory sf = Hibernate.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.beginTransaction();
+        
         Order order = (Order) s.get(Order.class, id);
+        t.commit();
+        
         s.flush();
         s.close();
 

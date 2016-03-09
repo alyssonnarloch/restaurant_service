@@ -44,9 +44,9 @@ public class AuthenticationResource {
             user = new User();
         }
 
+        t.commit();
         s.flush();
         s.close();
-        t.commit();
 
         user.setPassword("********************");
         GenericEntity<User> entity = new GenericEntity<User>(user) {

@@ -1,6 +1,7 @@
 package resource;
 
 import hibernate.Hibernate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -30,18 +31,32 @@ public class OrderItemResource {
     }
 
     @GET
-    @Path("/order/{order_id}")
+    @Path("/order_items/user/{user_id}")
     @Produces("application/json; charset=UTF-8")
-    public Response getByOrder(@PathParam("order_id") int orderId) {
+    public Response getByLastOrderUser(@PathParam("user_id") int userId) {
         SessionFactory sf = Hibernate.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.beginTransaction();
 
-        Query query = s.createQuery("FROM OrderItem WHERE order_id = :orderId");
-        query.setInteger("orderId", orderId);
+        Query query = s.createQuery("FROM Order WHERE user_id = :userId AND status = :status ORDER BY id DESC");
+        query.setInteger("userId", userId);
+        query.setInteger("status", Order.STATUS_OPENED);
+        query.setMaxResults(1);
+        Order lastOpenedOrder = (Order) query.uniqueResult();
 
-        GenericEntity<List<OrderItem>> entity = new GenericEntity<List<OrderItem>>(query.list()) {
+        List<OrderItem> orderItems = new ArrayList<OrderItem>();
+        
+        if (lastOpenedOrder != null) {
+            Query queryItems = s.createQuery("FROM OrderItem WHERE order_id = :orderId");
+            queryItems.setInteger("orderId", lastOpenedOrder.getId());
+            orderItems = queryItems.list();
+        }
+
+        GenericEntity<List<OrderItem>> entity = new GenericEntity<List<OrderItem>>(orderItems) {
         };
 
+        t.commit();
+        
         s.flush();
         s.close();
 
